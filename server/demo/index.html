@@ -1,276 +1,279 @@
 <!doctype html>
 <html lang="en" ng-app="demo">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+		<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+		<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" />
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+		<script src="https://unpkg.com/ansi_up@4.0.4/ansi_up.js"></script>
 
-<head>
+		<style>
+			#table,
+			#table tbody,
+			#table tbody tr,
+			#table tbody tr td,
+			#table tbody tr th {
+				margin: 0;
+				padding: 0;
+				font-size: 20px;
+				font-family: "Inconsolata", monospace;
+			}
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-  <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-  <script src="https://unpkg.com/ansi_up@4.0.4/ansi_up.js"></script>
+			#table {
+				border-collapse: separate;
+				border-spacing: 0.1em 0.4em;
+			}
 
-  <style>
-    #table,
-    #table tbody,
-    #table tbody tr,
-    #table tbody tr td,
-    #table tbody tr th {
-      margin: 0;
-      padding: 0;
-      font-size: 20px;
-      font-family: 'Inconsolata', monospace;
-    }
+			.kb {
+				padding: 0.1em 0.4em !important;
+				border: 1px solid #ccc;
+				/* font-size:11px; */
+				/* font-family:Arial,Helvetica,sans-serif; */
+				background-color: #f7f7f7;
+				color: #333;
+				-moz-box-shadow:
+					0 1px 0px rgba(0, 0, 0, 0.2),
+					0 0 0 2px #ffffff inset;
+				-webkit-box-shadow:
+					0 1px 0px rgba(0, 0, 0, 0.2),
+					0 0 0 2px #ffffff inset;
+				box-shadow:
+					0 1px 0px rgba(0, 0, 0, 0.2),
+					0 0 0 2px #ffffff inset;
+				-moz-border-radius: 3px;
+				-webkit-border-radius: 3px;
+				border-radius: 3px;
+				/* display:inline-block; */
+				margin: 0 0.1em;
+				text-shadow: 0 1px 0 #fff;
+				/* line-height:1.4; */
+				white-space: nowrap;
+			}
 
-    #table {
-      border-collapse: separate; 
-      border-spacing: 0.1em 0.4em;
-    }
+			#table tbody tr th,
+			#table tbody tr td {
+				text-align: center;
+				text-overflow: clip;
+			}
 
-    .kb {
-      padding:0.1em 0.4em !important;
-      border:1px solid #ccc;
-      /* font-size:11px; */
-      /* font-family:Arial,Helvetica,sans-serif; */
-      background-color:#f7f7f7;
-      color:#333;
-      -moz-box-shadow:0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset;
-      -webkit-box-shadow:0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset;
-      box-shadow:0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset;
-      -moz-border-radius:3px;
-      -webkit-border-radius:3px;
-      border-radius:3px;
-      /* display:inline-block; */
-      margin:0 0.1em;
-      text-shadow:0 1px 0 #fff;
-      /* line-height:1.4; */
-      white-space:nowrap;
-    }
+			#table tbody tr td {
+				font-size: 10px;
+			}
 
-    #table tbody tr th,
-    #table tbody tr td {
-      text-align: center;
-      text-overflow: clip;
-    }
+			.score {
+				width: 80px;
+				display: block;
+				text-align: left;
+				background-color: #dedede;
+			}
 
-    #table tbody tr td {
-      font-size: 10px;
-    }
+			.span {
+				background-color: rgb(223, 223, 223);
+			}
 
-    .score {
-      width: 80px;
-      display: block;
-      text-align: left;
-      background-color: #dedede;
-    }
+			.span-street {
+				background-color: rgb(238, 193, 95);
+			}
 
-    .span {
-      background-color: rgb(223, 223, 223);
-    }
+			.span-housenumber {
+				background-color: rgb(230, 134, 222);
+			}
 
-    .span-street {
-      background-color: rgb(238, 193, 95);
-    }
+			.span-postcode {
+				background-color: rgb(134, 195, 230);
+			}
 
-    .span-housenumber {
-      background-color: rgb(230, 134, 222);
-    }
+			#debug {
+				white-space: pre-wrap;
+				font-family: monospace;
+			}
 
-    .span-postcode {
-      background-color: rgb(134, 195, 230);
-    }
+			#debug span {
+				color: lightgrey;
+				display: inline-block;
+			}
+		</style>
 
-    #debug {
-      white-space: pre-wrap;
-      font-family: monospace;
-    }
+		<script>
+			function exec(args) {
+				$("#input").empty()
+				parse(args, function (results) {
+					results = results || []
 
-    #debug span {
-      color: lightgrey;
-      display: inline-block;
-    }
-  </style>
+					// render results
+					render(results)
+				})
+			}
 
-  <script>
-    function exec(args) {
-      $('#input').empty();
-      parse(args, function (results) {
-        results = results || [];
+			function render(res) {
+				$("#input").empty()
+				$("#solutions").empty()
+				$("#table").empty()
+				$("#debug").empty()
 
-        // render results
-        render(results);
-      });
-    }
+				// $('#input').html(JSON.stringify(res.input))
+				// $('#solutions').html(JSON.stringify(res.solutions))
 
-    function render(res) {
+				var body = $("<tbody>")
 
-      $('#input').empty();
-      $('#solutions').empty();
-      $('#table').empty();
-      $('#debug').empty();
+				// headings
+				var row = $("<tr>")
+				row.append($("<th>").addClass("score").text(""))
+				for (let characterIndex = res.input.start; characterIndex < res.input.end; characterIndex++) {
+					const cell = $("<th>")
+					let char = res.input.body.charAt(characterIndex)
+					if (char.trim().length > 0) {
+						cell.addClass("kb")
+					} else {
+						char = String.fromCharCode(160)
+					}
+					cell.text(char)
+					row.append(cell)
+				}
+				body.append(row)
 
-      // $('#input').html(JSON.stringify(res.input))
-      // $('#solutions').html(JSON.stringify(res.solutions))
+				// solutions
+				res.solutions.forEach(function (s) {
+					row = $("<tr>")
+					row.append(
+						$("<th>")
+							.addClass("score")
+							.text((s.score * 100).toFixed(1) + "%")
+					)
+					for (let i = res.input.start; i < res.input.end; i++) {
+						const cell = $("<td>")
 
-      var body = $('<tbody>')
+						var spanStart = false
+						var classification
+						for (var j = 0; j < s.classifications.length; j++) {
+							if (s.classifications[j].start === i) {
+								spanStart = true
+								classification = s.classifications[j]
+							}
+						}
 
-      // headings
-      var row = $('<tr>')
-      row.append($('<th>').addClass('score').text(''))
-      for( var i= res.input.start; i< res.input.end; i++ ){
-        let cell = $('<th>')
-        let char = res.input.body.charAt(i);
-        if( char.trim().length > 0 ){
-          cell.addClass('kb');
-        } else {
-          char = String.fromCharCode(160);
-        }
-        cell.text(char)
-        row.append(cell);
-      }
-      body.append(row);
+						if (spanStart) {
+							var covers = classification.end - classification.start
+							cell.attr("colspan", covers)
+							cell.addClass("span")
+							cell.addClass("span-" + classification.label)
+							cell.text(classification.label)
+							i += covers - 1
+						} else {
+							cell.text(String.fromCharCode(160))
+						}
 
-      // solutions
-      res.solutions.forEach(function( s ){
+						row.append(cell)
+					}
+					body.append(row)
+				})
 
-        row = $('<tr>')
-        row.append($('<th>').addClass('score').text((s.score * 100).toFixed(1) + '%'))
-        for (var i = res.input.start; i < res.input.end; i++) {
-          let cell = $('<td>')
+				$("#table").append(body)
 
-          var spanStart = false;
-          var classification;
-          for (var j=0; j < s.classifications.length; j++) {
-            if( s.classifications[j].start === i ){
-              spanStart = true
-              classification = s.classifications[j]
-            }
-          }
+				const debugHtml = new AnsiUp().ansi_to_html(res.debug)
+				$("#debug").html(debugHtml)
+			}
 
-          if( spanStart ){
-            var covers = classification.end - classification.start;
-            cell.attr('colspan', covers);
-            cell.addClass('span');
-            cell.addClass('span-'+ classification.label);
-            cell.text(classification.label);
-            i += covers-1;
-          } else {
-            cell.text(String.fromCharCode(160));
-          }
+			function request(url, params, cb) {
+				$.ajax({
+					url,
+					method: "GET",
+					data: params,
+					headers: { Accept: "application/json" },
+				}).done(cb)
+			}
 
-          row.append(cell);
-        }
-        body.append(row);
+			function parse(args, cb) {
+				saveText(args.text)
+				request(
+					"/parser/parse",
+					{
+						...args,
+						debug: true,
+					},
+					cb
+				)
+			}
 
-      });
-  
-      $('#table').append(body);
+			function saveText(text) {
+				if (window.localStorage) {
+					window.localStorage.setItem("text", text)
+				}
+			}
 
-      const debugHtml = new AnsiUp().ansi_to_html(res.debug);
-      $('#debug').html(debugHtml);
-    }
+			function loadText() {
+				let hash = window.location.hash
+				if (hash && hash.length) {
+					if (hash[0] === "#") {
+						hash = hash.slice(1)
+					}
+					if (hash.length) {
+						return decodeURIComponent(hash)
+					}
+				}
 
-    function request(url, params, cb) {
-      $.ajax({
-        url: url,
-        method: 'GET',
-        data: params,
-        headers: { 'Accept': 'application/json' }
-      })
-      .done(cb);
-    };
+				if (window.localStorage) {
+					var text = window.localStorage.getItem("text")
+					if (text) {
+						return text
+					}
+				}
 
-    function parse(args, cb) {
-      saveText(args.text);
-      request('/parser/parse', {
-        ...args,
-        debug: true
-      }, cb);
-    }
+				// default text
+				return "1389a County Road 42 IA"
+			}
 
-    function saveText(text) {
-      if (window.localStorage) {
-        window.localStorage.setItem('text', text);
-      }
-    }
+			$(document).ready(function () {
+				var liveMode = _.debounce(function () {
+					// if (e.which === 13) { return false; } // not for enter key
 
-    function loadText() {
-      let hash = window.location.hash;
-      if (hash && hash.length) {
-        if(hash[0] === '#'){ hash = hash.slice(1); }
-        if(hash.length){
-          return decodeURIComponent(hash);
-        }
-      }
+					var args = { text: $("#text").val() }
+					exec(args)
 
-      if (window.localStorage) {
-        var text = window.localStorage.getItem('text');
-        if (text) { return text; }
-      }
+					// update location hash
+					window.location.hash = encodeURIComponent(args.text)
 
-      // default text
-      return '1389a County Road 42 IA';
-    }
+					return false
+				}, 200)
 
-    $(document).ready(function () {
+				// button / keyup event handlers
+				$("#search").on("submit", liveMode)
+				$("#search").on("keyup", liveMode)
 
-      var liveMode = _.debounce(function (e) {
-        // if (e.which === 13) { return false; } // not for enter key
+				$("#go").on("click", function () {
+					$("#search").submit()
+					return false
+				})
 
-        var args = { text: $('#text').val() };
-        exec(args);
+				$("#text").val(loadText())
+				liveMode({})
+			})
+		</script>
+	</head>
 
-        // update location hash
-        window.location.hash = encodeURIComponent(args.text);
+	<body>
+		<div style="margin: 20px">
+			<form id="search" action="">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="input-group">
+							<input id="text" type="text" class="form-control" placeholder="Search for..." />
+							<span class="input-group-btn">
+								<button id="go" class="btn btn-default" type="button">Parse!</button>
+							</span>
+						</div>
 
-        return false;
-      }, 200);
+						<ul id="input" class="btn-group" role="group" style="margin-top: 10px; list-style: none"></ul>
+						<ul id="solutions" class="list-group" style="margin-top: 10px"></ul>
 
-      // button / keyup event handlers
-      $('#search').on('submit', liveMode);
-      $('#search').on('keyup', liveMode);
+						<table id="table"></table>
 
-      $('#go').on('click', function () {
-        $('#search').submit();
-        return false;
-      });
-
-      $('#text').val(loadText());
-      liveMode({});
-    });
-  </script>
-
-</head>
-
-<body>
-
-  <div style="margin:20px;">
-
-    <form id="search" action="">
-      <div class="row">
-        <div class="col-md-6">
-
-          <div class="input-group">
-            <input id="text" type="text" class="form-control" placeholder="Search for...">
-            <span class="input-group-btn">
-              <button id="go" class="btn btn-default" type="button">Parse!</button>
-            </span>
-          </div>
-
-          <ul id="input" class="btn-group" role="group" style="margin-top:10px; list-style: none;"></ul>
-          <ul id="solutions" class="list-group" style="margin-top:10px;"></ul>
-          
-          <table id="table"></table>
-
-          <div id="debug"></div>
-        </div>
-
-      </div>
-    </form>
-
-  </div>
-
-</body>
-
+						<div id="debug"></div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
 </html>

@@ -1,10 +1,16 @@
-const Classification = require('./Classification')
+/**
+ * @copyright OpenISP, Inc.
+ * @license AGPL-3.0
+ * @author Teffen Ellis, et al.
+ */
+
+const Classification = require("./Classification")
 
 class EndTokenSingleCharacterClassification extends Classification {
-  constructor (confidence, meta) {
-    super(confidence, meta)
-    this.label = 'end_token_single_character'
-  }
+	constructor(confidence, meta) {
+		super(confidence, meta)
+		this.label = "end_token_single_character"
+	}
 }
 
 module.exports = EndTokenSingleCharacterClassification

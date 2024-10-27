@@ -1,16 +1,22 @@
+/**
+ * @copyright OpenISP, Inc.
+ * @license AGPL-3.0
+ * @author Teffen Ellis, et al.
+ */
+
 class BaseClassifier {
-  constructor () {
-    this.setup()
-  }
+	constructor() {
+		this.setup()
+	}
 
-  // you override this function in your classifier
-  // each(span) {}
+	// you override this function in your classifier
+	// each(span) {}
 
-  // you should provide this function in your subclass
-  // classify(tokenizer) {}
+	// you should provide this function in your subclass
+	// classify(tokenizer) {}
 
-  // you may optionally provide this function in your subclass
-  setup () {}
+	// you may optionally provide this function in your subclass
+	setup() {}
 }
 
 module.exports = BaseClassifier

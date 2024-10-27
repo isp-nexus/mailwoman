@@ -1,24 +1,30 @@
-const Classification = require('./CountryClassification')
+/**
+ * @copyright OpenISP, Inc.
+ * @license AGPL-3.0
+ * @author Teffen Ellis, et al.
+ */
+
+const Classification = require("./CountryClassification")
 
 module.exports.tests = {}
 
 module.exports.tests.constructor = (test) => {
-  test('constructor', (t) => {
-    let c = new Classification()
-    t.true(c.public)
-    t.equals(c.label, 'country')
-    t.equals(c.confidence, 0.9)
-    t.deepEqual(c.meta, {})
-    t.end()
-  })
+	test("constructor", (t) => {
+		const c = new Classification()
+		t.true(c.public)
+		t.equals(c.label, "country")
+		t.equals(c.confidence, 0.9)
+		t.deepEqual(c.meta, {})
+		t.end()
+	})
 }
 
 module.exports.all = (tape, common) => {
-  function test (name, testFunction) {
-    return tape(`CountryClassification: ${name}`, testFunction)
-  }
+	function test(name, testFunction) {
+		return tape(`CountryClassification: ${name}`, testFunction)
+	}
 
-  for (var testCase in module.exports.tests) {
-    module.exports.tests[testCase](test, common)
-  }
+	for (const testCase in module.exports.tests) {
+		module.exports.tests[testCase](test, common)
+	}
 }
