@@ -1,36 +1,11 @@
-<p align="center">
-  <img height="100" src="https://raw.githubusercontent.com/pelias/design/master/logo/pelias_github/Github_markdown_hero.png">
-</p>
-<h3 align="center">A modular, open-source search engine for our world.</h3>
-<p align="center">Pelias is a geocoder powered completely by open data, available freely to everyone.</p>
-<p align="center">
-<a href="https://en.wikipedia.org/wiki/MIT_License"><img src="https://img.shields.io/github/license/pelias/api?style=flat&color=orange" /></a>
-<a href="https://hub.docker.com/u/pelias"><img src="https://img.shields.io/docker/pulls/pelias/api?style=flat&color=informational" /></a>
-<a href="https://gitter.im/pelias/pelias"><img src="https://img.shields.io/gitter/room/pelias/pelias?style=flat&color=yellow" /></a>
-</p>
-<p align="center">
-	<a href="https://github.com/pelias/docker">Local Installation</a> ·
-        <a href="https://geocode.earth">Cloud Webservice</a> ·
-	<a href="https://github.com/pelias/documentation">Documentation</a> ·
-	<a href="https://gitter.im/pelias/pelias">Community Chat</a>
-</p>
-<details open>
-<summary>What is Pelias?</summary>
-<br />
-Pelias is a search engine for places worldwide, powered by open data. It turns addresses and place names into geographic coordinates, and turns geographic coordinates into places and addresses. With Pelias, you’re able to turn your users’ place searches into actionable geodata and transform your geodata into real places.
-<br /><br />
-We think open data, open source, and open strategy win over proprietary solutions at any part of the stack and we want to ensure the services we offer are in line with that vision. We believe that an open geocoder improves over the long-term only if the community can incorporate truly representative local knowledge.
-</details>
-
-# Pelias Parser
+# Mailwoman
 
 A natural language classification engine for geocoding.
 
-This library contains primitive 'building blocks' which can be composed together to produce a powerful and flexible natural language parser.
+![GitHub License](https://img.shields.io/github/license/isp-nexus/mailwoman)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/isp-nexus/mailwoman)
 
-The project was designed and built to work with the [Pelias geocoder](https://github.com/pelias/pelias), so it comes bundled with a parser called `AddressParser` which can be included in other npm project independent of Pelias.
-
-It is also possible to modify the configuration of `AddressParser`, the dictionaries or the semantics. You can also easily create a completely new parser to suit your own domain.
+# Pelias Parser
 
 ## AddressParser Example
 
@@ -48,6 +23,7 @@ It is also possible to modify the configuration of `AddressParser`, the dictiona
 ## Application Interfaces
 
 You can access the library via three different interfaces:
+
 - all parts of the codebase are available in `javascript` via `npm`
 - on the `command line` via the `node bin/cli.js` script
 - through a `web service` via the `node server/http.js` script
@@ -118,12 +94,12 @@ The graph is free-form, so it's easy to add a new relationship between terms in 
 
 Graph Example:
 
-```javascript
+```js
 // find the next word in this section
-word.findOne('next')
+word.findOne("next")
 
 // find all words in this phrase
-phrase.findAll('child')
+phrase.findAll("child")
 ```
 
 ## Classification
@@ -131,6 +107,7 @@ phrase.findAll('child')
 Classification is the process of establishing that a `word` or `phrase` represents a 'concept' (such as a street name).
 
 Classification can be based on:
+
 - Dictionary matching (usually with normalization applied)
 - Pattern matching (such as regular expressions)
 - Composite matching (such as relative positioning)
@@ -155,28 +132,25 @@ You can find them in the `/classifier` directory, dictionary-based classifiers u
 
 Example of some of the included classifiers:
 
-```javascript
-// word classifiers
-HouseNumberClassifier
-PostcodeClassifier
-StreetPrefixClassifier
-StreetSuffixClassifier
-CompoundStreetClassifier
-DirectionalClassifier
-OrdinalClassifier
-StopWordClassifier
-
-// phrase classifiers
-IntersectionClassifier
-PersonClassifier
-GivenNameClassifier
-SurnameClassifier
-PersonalSuffixClassifier
-PersonalTitleClassifier
-ChainClassifier
-PlaceClassifier
-WhosOnFirstClassifier
-```
+- Word Classifiers
+  - HouseNumberClassifier
+  - PostcodeClassifier
+  - StreetPrefixClassifier
+  - StreetSuffixClassifier
+  - CompoundStreetClassifier
+  - DirectionalClassifier
+  - OrdinalClassifier
+  - StopWordClassifier
+- Phrase Classifiers
+  - IntersectionClassifier
+  - PersonClassifier
+  - GivenNameClassifier
+  - SurnameClassifier
+  - PersonalSuffixClassifier
+  - PersonalTitleClassifier
+  - ChainClassifier
+  - PlaceClassifier
+  - WhosOnFirstClassifier
 
 ## Solvers
 
@@ -187,10 +161,12 @@ Each parse can contain multiple `solutions`, each is provided with a `confidence
 The core of this process is the `ExclusiveCartesianSolver` module.
 
 This `solver` generates all the possible permutations of the different classifications while taking care to:
+
 - ensure the same `span` position is not used more than once
 - ensure that the same `classification` is not used more than once.
 
 After the `ExclusiveCartesianSolver` has run there are additional solvers which can:
+
 - filter the `solutions` to remove inconsistencies
 - add new `solutions` to provide additional functionality (such as intersections)
 
@@ -198,9 +174,9 @@ After the `ExclusiveCartesianSolver` has run there are additional solvers which 
 
 It is possible to produce a simple `mask` for any generated solution, this is useful for comparing the `solution` to the original text:
 
-```javascript
+```
 VVV VVVV NN SSSSSSS AAAAAA PPPPP
-Foo Cafe 10 Main St London 10010 Earth      
+Foo Cafe 10 Main St London 10010 Earth
 ```
 
 # Contributing
@@ -211,17 +187,22 @@ Please fork and pull request against upstream master on a feature branch. Pretty
 
 You can run the unit test suite using the command:
 
-```bash
+```sh
 $ npm test
 ```
 
+# License
 
-### Continuous Integration
+Mailwoman is distributed under the AGPL-3.0 license. Generally,
+this means that you can use the software for free, but you must share
+any modifications you make to the software.
 
-CI tests every release against all supported Node.js versions.
+Unmodified portions of Mailwoman derived from Pelias Parser remain under the
+MIT license.
 
-### Versioning
+For more information on commercial usage licensing, please contact us at
+`hello@isp.nexus`
 
-We rely on semantic-release and Greenkeeper to maintain our module and dependency versions.
+# Acknowledgements
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/pelias/parser.svg)](https://greenkeeper.io/)
+This project was built by the [Open ISP](https://isp.nexus) team and was made possible by the contributions of the Pelias community.

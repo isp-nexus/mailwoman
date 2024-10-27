@@ -1,62 +1,88 @@
 {
-  "name": "pelias-parser",
-  "version": "0.0.0-development",
-  "author": "pelias",
-  "description": "Pelias parsing library",
-  "homepage": "https://github.com/pelias/parser",
-  "license": "MIT",
-  "main": "server/http.js",
-  "scripts": {
-    "units": "./bin/test unit",
-    "funcs": "./bin/test func",
-    "format_check": "./node_modules/standard/bin/cmd.js",
-    "format_fix": "./node_modules/standard/bin/cmd.js --fix",
-    "server": "node ./server/http.js",
-    "test": "./bin/test",
-    "ci": "./bin/test",
-    "lint": "jshint .",
-    "validate": "npm ls"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pelias/parser.git"
-  },
-  "keywords": [
-    "pelias",
-    "parser"
-  ],
-  "bugs": {
-    "url": "https://github.com/pelias/parser/issues"
-  },
-  "engines": {
-    "node": ">= 10.0.0"
-  },
-  "dependencies": {
-    "cluster": "^0.7.7",
-    "express": "^4.16.4",
-    "pluralize": "^8.0.0",
-    "remove-accents": "^0.4.2",
-    "stringbuffer": "^1.0.0"
-  },
-  "devDependencies": {
-    "better-sqlite3": "^7.4.1",
-    "chalk": "^2.4.2",
-    "csv-parse": "^4.4.1",
-    "deep-eql": "^4.0.0",
-    "glob": "^7.1.3",
-    "precommit-hook": "^3.0.0",
-    "standard": "^12.0.1",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.4.0"
-  },
-  "pre-commit": [
-    "format_check",
-    "lint",
-    "validate",
-    "test"
-  ],
-  "release": {
-    "branch": "master",
-    "success": []
-  }
+	"name": "mailwoman",
+	"version": "1.0.0",
+	"description": "Pelias parsing library",
+	"keywords": [
+		"pelias",
+		"parser"
+	],
+	"homepage": "https://github.com/isp-nexus/mailwoman",
+	"bugs": {
+		"url": "https://github.com/pelias/parser/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pelias/parser.git"
+	},
+	"license": "AGPL-3.0-only",
+	"author": "pelias",
+	"contributors": [
+		{
+			"name": "Teffen Ellis",
+			"email": "teffen@sister.software"
+		},
+		{
+			"name": "Pelias Contributors"
+		}
+	],
+	"main": "server/http.js",
+	"scripts": {
+		"units": "./bin/test unit",
+		"funcs": "./bin/test func",
+		"server": "node ./server/http.js",
+		"test": "./bin/test",
+		"ci": "./bin/test",
+		"lint": "run-s lint:prettier:check lint:eslint:check",
+		"lint:fix": "run-s lint:prettier:fix lint:eslint:fix",
+		"lint:prettier:check": "prettier --cache --check -u .",
+		"lint:prettier:fix": "prettier --cache --write -u .",
+		"lint:prettier": "eslint .",
+		"lint:eslint:check": "eslint .",
+		"lint:eslint:fix": "eslint --fix .",
+		"prepare": "husky"
+	},
+	"pre-commit": [
+		"lint",
+		"validate",
+		"test"
+	],
+	"prettier": "@sister.software/prettier-config",
+	"release": {
+		"branch": "main",
+		"success": []
+	},
+	"dependencies": {
+		"cluster": "^0.7.7",
+		"express": "^4.16.4",
+		"pluralize": "^8.0.0",
+		"remove-accents": "^0.4.2",
+		"stringbuffer": "^1.0.0"
+	},
+	"devDependencies": {
+		"@sister.software/eslint-config": "6.1.0",
+		"@sister.software/prettier-config": "6.1.0",
+		"@sister.software/tsconfig": "6.1.0",
+		"better-sqlite3": "^11.5.0",
+		"chalk": "^2.4.2",
+		"csv-parse": "^4.4.1",
+		"deep-eql": "^4.0.0",
+		"eslint": "^9.13.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-html": "^8.1.2",
+		"glob": "^7.1.3",
+		"husky": "^9.1.6",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.3.3",
+		"prettier-plugin-jsdoc": "^1.3.0",
+		"prettier-plugin-organize-imports": "^4.1.0",
+		"prettier-plugin-packagejson": "^2.5.3",
+		"tap-spec": "^5.0.0",
+		"tape": "^4.4.0",
+		"typescript": "^5.6.3",
+		"typescript-eslint": "^8.11.0"
+	},
+	"packageManager": "yarn@4.5.1",
+	"engines": {
+		"node": ">= 10.0.0"
+	}
 }

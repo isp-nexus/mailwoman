@@ -1,5 +1,4 @@
 node_modules
-package-lock.json
 
 # ignore all of whosonfirst/dictionaries
 resources/whosonfirst/dictionaries/*/*.txt
@@ -21,3 +20,35 @@ resources/custom/dictionaries
 
 # ignore any openaddresses test cases
 test/oa
+
+# OS X
+.DS_Store
+._*
+
+## Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+## Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+## Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+
+# Yarn (without zero-installs)
+# https://yarnpkg.com/getting-started/qa
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
