@@ -4,15 +4,31 @@
  * @author Teffen Ellis, et al.
  */
 
-const Tokenizer = require("../../tokenization/Tokenizer")
-const DebugOutputBuilder = require("../../debug/DebugOutputBuilder")
+import { DebugOutputBuilder, Tokenizer } from "mailwoman"
 
-module.exports = function (req, res) {
-	// address parser
+/**
+ * Parse an address.
+ *
+ * @type {import("express").RequestHandler}
+ */
+export function parseRouteHandler(req, res) {
+	/**
+	 * @type {import("mailwoman").Parser}
+	 */
 	const parser = req.app.locals.parser.address
 
+	if (typeof req.query.text !== "string") {
+		res.status(400).json({ error: "missing `text` query parameter" })
+		return
+	}
+
+	if (req.query.text.length === 0) {
+		res.status(400).json({ error: "`text` query parameter is empty" })
+		return
+	}
+
 	// input text
-	const text = req.query.text || ""
+	const text = req.query.text
 
 	// tokenizer
 	const t = new Tokenizer(text)
@@ -31,6 +47,11 @@ module.exports = function (req, res) {
 	})
 }
 
+/**
+ * @param {import("../../solver/Solution.js")} solution
+ *
+ * @returns {Record<string, any>} JSON representation of a solution
+ */
 function jsonify(solution) {
 	return {
 		score: solution.score,

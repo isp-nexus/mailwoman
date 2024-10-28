@@ -16,18 +16,14 @@ const MailwomanESLintConfig = createESLintPackageConfig({
 	copyrightHolder: "OpenISP, Inc.",
 	packageTitle: "Mailwoman",
 	spdxLicenseIdentifier: "AGPL-3.0",
+
 	overrides: {
 		plugins: { html },
-		ignores: [
-			// ---
-			"**/dist/**",
-			"**/*.json",
-			"**/out/**",
-			"**/node_modules/**",
-		],
 		rules: {
 			"@typescript-eslint/no-require-imports": "off",
 			"no-prototype-builtins": "off",
+			"jsdoc/require-property-description": "off",
+			"jsdoc/require-param-description": "off",
 		},
 	},
 })

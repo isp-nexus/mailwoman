@@ -4,19 +4,33 @@
  * @author Teffen Ellis, et al.
  */
 
-const fs = require("fs")
-const path = require("path")
-const sqlite = require("better-sqlite3")
-const dictPath = path.join(__dirname, "dictionaries")
+import sqlite from "better-sqlite3"
+import * as fs from "node:fs/promises"
+import { basename, dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const resourceDictionaryDirectory = join(__dirname, "dictionaries")
+
+/**
+ * @typedef {object} Row
+ * @property {number} id
+ * @property {string} placetype
+ * @property {string} path
+ * @property {string} fullkey
+ * @property {string} value
+ * @property {string} lang
+ * @property {string} field
+ */
 
 // generate dictionaries dir if it doesn't exist
-if (!fs.existsSync(dictPath)) {
-	fs.mkdirSync(dictPath)
-}
+await fs.mkdir(resourceDictionaryDirectory, {
+	recursive: true,
+})
 
 // validate input args
 if (process.argv.length !== 3) {
-	console.error("usage: node %s {dbpath.sqlite}", path.basename(__filename))
+	console.error("usage: node %s {dbpath.sqlite}", basename(__filename))
 	process.exit(1)
 }
 
@@ -24,7 +38,10 @@ if (process.argv.length !== 3) {
 const db = sqlite(process.argv[2], { readonly: true })
 
 // generate SQL statement
-const stmt = db.prepare(`
+/**
+ * @type {import("better-sqlite3").Statement<[], Row>}
+ */
+const stmt = db.prepare(/* sql */ `
 WITH properties AS (
   SELECT id, json_extract(body, '$.properties') AS body
   FROM geojson
@@ -47,7 +64,11 @@ AND (
 )`)
 
 // an array to hold all languages
-const data = []
+
+/**
+ * @type {Record<string, Record<string, Set<string>>>}
+ */
+const data = {}
 
 // language blacklist
 const blacklist = ["unk", "vol"]
@@ -108,23 +129,16 @@ for (const row of stmt.iterate()) {
 	// process.stderr.write('.')
 }
 
-// write to disk
 for (const placetype in data) {
-	// generate lang dir if it doesn't exist
-	const placetypePath = path.join(dictPath, placetype)
-	if (!fs.existsSync(placetypePath)) {
-		fs.mkdirSync(placetypePath)
-	}
+	const placetypePath = join(resourceDictionaryDirectory, placetype)
+
+	await fs.mkdir(placetypePath, {
+		recursive: true,
+	})
 
 	for (const field in data[placetype]) {
-		const filePath = path.join(placetypePath, `${field}.txt`)
+		const filePath = join(placetypePath, `${field}.txt`)
 
-		// unlink file if exists
-		if (fs.existsSync(filePath)) {
-			fs.unlinkSync(filePath)
-		}
-
-		// write data to file
-		fs.writeFileSync(filePath, Array.from(data[placetype][field]).join("\n"))
+		await fs.writeFile(filePath, Array.from(data[placetype][field]).join("\n"))
 	}
 }

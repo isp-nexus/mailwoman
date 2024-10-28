@@ -1,0 +1,9 @@
+{
+	"extends": "@sister.software/tsconfig",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"checkJs": true,
+		"emitDeclarationOnly": true
+	},
+	"exclude": ["./out/**/*"]
+}
