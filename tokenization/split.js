@@ -6,6 +6,12 @@
 
 const Span = require("./Span")
 
+/**
+ * @param {Span} span
+ * @param {(char: string) => boolean} f
+ *
+ * @returns {Span[]}
+ */
 function split(span, f) {
 	// A span is used to record a slice of s of the form s[start:end].
 	// The start index is inclusive and the end index is exclusive.
@@ -46,7 +52,7 @@ function split(span, f) {
 	}
 
 	// Add siblings to graph
-	Span.connectSiblings(spans)
+	Span.connectSiblings(...spans)
 
 	return spans
 }

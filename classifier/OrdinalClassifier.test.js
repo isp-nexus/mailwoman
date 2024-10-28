@@ -30,16 +30,12 @@ module.exports.tests.contains_numerals = (test) => {
 module.exports.tests.english = (test) => {
 	test("English: single digit", (t) => {
 		const s = classify("1st")
-		t.deepEqual(s.classifications, {
-			OrdinalClassification: new OrdinalClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { OrdinalClassification: new OrdinalClassification(1.0) })
 		t.end()
 	})
 	test("English: multiple digits", (t) => {
 		const s = classify("250th")
-		t.deepEqual(s.classifications, {
-			OrdinalClassification: new OrdinalClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { OrdinalClassification: new OrdinalClassification(1.0) })
 		t.end()
 	})
 }

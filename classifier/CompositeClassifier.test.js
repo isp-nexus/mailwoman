@@ -39,10 +39,7 @@ module.exports.tests.match = (test) => {
 	})
 
 	test("match: scheme.not multi-token", (t) => {
-		const scheme = {
-			is: ["PositiveClassification"],
-			not: ["NegativeClassification"],
-		}
+		const scheme = { is: ["PositiveClassification"], not: ["NegativeClassification"] }
 
 		const phrase = new Span("Test Phrase")
 		t.false(classifier.match(scheme, phrase))
@@ -57,10 +54,7 @@ module.exports.tests.match = (test) => {
 	})
 
 	test("match: scheme.not single-token", (t) => {
-		const scheme = {
-			is: ["PositiveClassification"],
-			not: ["NegativeClassification"],
-		}
+		const scheme = { is: ["PositiveClassification"], not: ["NegativeClassification"] }
 
 		const phrase = new Span("Test")
 		t.false(classifier.match(scheme, phrase))

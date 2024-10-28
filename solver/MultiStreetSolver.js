@@ -4,7 +4,6 @@
  * @author Teffen Ellis, et al.
  */
 
-const _ = require("lodash")
 const HashMapSolver = require("./super/HashMapSolver")
 
 // classifications which are more granular than StreetClassification
@@ -40,23 +39,32 @@ const MORE_GRANULAR_THAN_STREET = [
  */
 
 class MultiStreetSolver extends HashMapSolver {
+	/**
+	 * @param {import("../tokenization/Tokenizer")} tokenizer
+	 *
+	 * @returns {void}
+	 * @override
+	 */
 	solve(tokenizer) {
-		const map = this.generateHashMap(tokenizer, true)
+		const { multistreet, street } = this.generateHashMap(tokenizer, true)
 
 		// sanity checking
-		if (_.get(map, "multistreet.pair.length", 0) < 1) {
+		if (!multistreet || multistreet.pair.length < 1) {
 			return
 		}
-		if (_.get(map, "street.pair.length", 0) < 2) {
+
+		if (!street || street.pair.length < 2) {
 			return
 		}
 
 		// only currently consider one multistreet parse (for simplicity)
 		// @todo: there may be some rare cases where we detect more than one?
-		const multi = _.first(map.multistreet.pair)
+		const multi = multistreet.pair[0]
+
+		if (!multi) return
 
 		// generate a list of streets which intersect the multistreet
-		const streets = map.street.pair.filter((s) => s.span.intersects(multi.span))
+		const streets = street.pair.filter((s) => s.span.intersects(multi.span))
 		if (streets.length < 2) {
 			return
 		}
@@ -80,10 +88,12 @@ class MultiStreetSolver extends HashMapSolver {
 
 			// remove some pairs from the solution
 			const truncated = solution.copy()
-			truncated.pair = truncated.pair.filter(
-				(s) =>
+
+			truncated.pair = truncated.pair.filter((s) => {
+				return (
 					s.span.start >= street.span.start && !MORE_GRANULAR_THAN_STREET.includes(s.classification.constructor.name)
-			)
+				)
+			})
 
 			return truncated
 		})
@@ -91,7 +101,8 @@ class MultiStreetSolver extends HashMapSolver {
 		// the truncation step above can generate duplicate solutions so a 'content hash'
 		// is generated in order to deduplicate them.
 		// note: this is purely a performance optimization as it generates fewer candidates
-		candidates = _.uniqBy(candidates, (truncated) => {
+
+		candidates = uniqBy(candidates, (truncated) => {
 			return truncated.pair.map((p) => `${p.classification.label}:${p.span.norm}`).join("_")
 		})
 
@@ -114,3 +125,26 @@ class MultiStreetSolver extends HashMapSolver {
 }
 
 module.exports = MultiStreetSolver
+
+/**
+ * @template T
+ * @param {T[]} arr
+ * @param {(o: T) => any} predicate
+ *
+ * @returns {T[]}
+ */
+
+function uniqBy(arr, predicate) {
+	const pickedObjects = arr
+		.filter(Boolean)
+		.reduce((map, item) => {
+			const key = predicate(item)
+
+			if (!key) return map
+
+			return map.has(key) ? map : map.set(key, item)
+		}, new Map())
+		.values()
+
+	return Array.from(pickedObjects)
+}

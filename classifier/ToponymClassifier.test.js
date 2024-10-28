@@ -42,9 +42,7 @@ module.exports.tests.english_suffix = (test) => {
 			const s = classify(token)
 
 			t.deepEqual(s.classifications, {
-				ToponymClassification: new ToponymClassification(1, {
-					langs: { en: true },
-				}),
+				ToponymClassification: new ToponymClassification(1, { langs: { en: true } }),
 			})
 			t.end()
 		})

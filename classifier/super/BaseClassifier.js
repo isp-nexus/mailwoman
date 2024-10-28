@@ -2,6 +2,7 @@
  * @copyright OpenISP, Inc.
  * @license AGPL-3.0
  * @author Teffen Ellis, et al.
+ * @abstract
  */
 
 class BaseClassifier {
@@ -12,10 +13,17 @@ class BaseClassifier {
 	// you override this function in your classifier
 	// each(span) {}
 
-	// you should provide this function in your subclass
-	// classify(tokenizer) {}
+	/**
+	 * @abstract
+	 * @param {import("../../tokenization/Tokenizer")} tokenizer
+	 */
+	classify(tokenizer) {}
 
 	// you may optionally provide this function in your subclass
+	/**
+	 * @abstract
+	 * @optional
+	 */
 	setup() {}
 }
 

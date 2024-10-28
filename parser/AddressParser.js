@@ -45,6 +45,9 @@ const HouseNumberPositionPenalty = require("../solver/HouseNumberPositionPenalty
 const PostcodePositionPenalty = require("../solver/PostcodePositionPenalty")
 
 class AddressParser extends Parser {
+	/**
+	 * @param {import("./Parser").ParserOptions} [options]
+	 */
 	constructor(options) {
 		super(
 			// classifiers

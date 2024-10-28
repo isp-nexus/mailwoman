@@ -67,9 +67,9 @@ class CompositeClassifier extends SectionClassifier {
 		// note: this mutates the original array
 		phrases.sort((a, b) => a.norm.length - b.norm.length)
 
-		this.schemes.forEach((scheme) => {
+		this.schemes.forEach((s) => {
 			// invalid scheme
-			if (!Array.isArray(scheme.scheme)) {
+			if (!Array.isArray(s.scheme)) {
 				return
 			}
 
@@ -77,7 +77,7 @@ class CompositeClassifier extends SectionClassifier {
 			let candidates = []
 
 			// compute candidate lists
-			candidates = scheme.scheme.map((s) => phrases.filter(this.match.bind(null, s)))
+			candidates = s.scheme.map((s) => phrases.filter(this.match.bind(null, s)))
 
 			// no candidates were found for one or more schemes
 			if (candidates.some((c) => c.length === 0)) {
@@ -126,7 +126,7 @@ class CompositeClassifier extends SectionClassifier {
 			}
 
 			// optionally classify phrase
-			if (typeof scheme.Class === "function") {
+			if (typeof s.Class === "function") {
 				// find phrases which equal the composites
 				let superPhrases = []
 				composites.forEach((c) => {
@@ -148,12 +148,12 @@ class CompositeClassifier extends SectionClassifier {
 							})
 						return acc
 					}, {})
-					p.classify(new scheme.Class(scheme.confidence, { langs }))
+					p.classify(new s.Class(s.confidence, { langs }))
 				})
 
 				// optionally classify individual phrases
 				composites.forEach((c) => {
-					scheme.scheme.forEach((sch, i) => {
+					s.scheme.forEach((sch, i) => {
 						if (typeof sch.Class === "function") {
 							c[i].classify(new sch.Class(sch.confidence))
 						}

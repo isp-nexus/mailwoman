@@ -4,8 +4,8 @@
  * @author Teffen Ellis, et al.
  */
 
-const fs = require("fs")
-const path = require("path")
+const fs = require("node:fs")
+const path = require("node:path")
 const pelias = require("../pelias/pelias")
 const custom = require("../custom/custom")
 const generateFilenames = require("../helper").generateFilenames

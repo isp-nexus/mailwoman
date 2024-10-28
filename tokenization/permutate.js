@@ -69,6 +69,15 @@ function permutateRec(prevSpan, s, windowCur, windowMin, windowMax, permutations
 	}
 }
 
+/**
+ * Produce all the possible token groups from adjacent input tokens (without reordering tokens)
+ *
+ * @param {Span[]} spans
+ * @param {number} windowMin
+ * @param {number} windowMax
+ *
+ * @returns {Span[]}
+ */
 function permutate(spans, windowMin, windowMax) {
 	const permutations = []
 	spans.forEach((span) => {

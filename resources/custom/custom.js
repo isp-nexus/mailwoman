@@ -4,7 +4,7 @@
  * @author Teffen Ellis, et al.
  */
 
-const path = require("path")
+const path = require("node:path")
 const resourceLoader = require("../helper").resourceLoader
 const dictPath = path.join(__dirname, "./dictionaries")
 

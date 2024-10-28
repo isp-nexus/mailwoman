@@ -14,11 +14,19 @@ class HashMapSolver extends BaseSolver {
 	// you should provide this function in your subclass
 	// solve() {}
 
+	/**
+	 * @param {import("../../tokenization/Tokenizer")} tokenizer
+	 * @param {boolean} [includePrivate]
+	 * @param {boolean} [includeEmpty]
+	 *
+	 * @returns {Record<string, Solution>} A hashmap of solutions
+	 */
 	generateHashMap(tokenizer, includePrivate, includeEmpty) {
+		/**
+		 * @type {Record<string, Solution>} A Hashmap of solutions
+		 */
 		const map = {}
-		for (let i = 0; i < tokenizer.section.length; i++) {
-			const section = tokenizer.section[i]
-
+		for (const section of tokenizer.section) {
 			// multi-word phrases
 			const phrases = section.graph.findAll("phrase")
 			for (let j = 0; j < phrases.length; j++) {
@@ -27,8 +35,7 @@ class HashMapSolver extends BaseSolver {
 				if (!keys.length) {
 					continue
 				}
-				for (const k in phrase.classifications) {
-					const classification = phrase.classifications[k]
+				for (const [phraseIdx, classification] of Object.entries(phrase.classifications)) {
 					if (!includePrivate && !classification.public) {
 						continue
 					}
@@ -47,14 +54,14 @@ class HashMapSolver extends BaseSolver {
 
 			// single-word spans
 			const children = section.graph.findAll("child")
-			for (let j = 0; j < children.length; j++) {
-				const word = children[j]
+
+			for (const word of children) {
 				const keys = Object.keys(word.classifications)
 				if (!keys.length) {
 					continue
 				}
-				for (const k in word.classifications) {
-					const classification = word.classifications[k]
+
+				for (const classification of Object.values(word.classifications)) {
 					if (!includePrivate && !classification.public) {
 						continue
 					}

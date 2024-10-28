@@ -4,15 +4,32 @@
  * @author Teffen Ellis, et al.
  */
 
-const _ = require("lodash")
-const fs = require("fs")
-const path = require("path")
+const fs = require("node:fs")
+const path = require("node:path")
 const pluralize = require("pluralize")
 const pelias = require("../pelias/pelias")
 const custom = require("../custom/custom")
 const dictPath = path.join(__dirname, "./dictionaries")
 const allLanguages = fs.readdirSync(dictPath).filter((p) => !p.includes("."))
 
+/**
+ * @typedef {object} Cell
+ * @property {Record<string, boolean>} langs
+ *
+ * @typedef {Record<string, Cell>} Index
+ *
+ * @typedef {object} NormalizeOptions
+ * @property {RegExp[]} [replace]
+ * @property {number} [minlength]
+ * @property {boolean} [lowercase]
+ */
+
+/**
+ * @param {Index} index
+ * @param {string[]} langs
+ * @param {string} filename
+ * @param {any} options
+ */
 function load(index, langs, filename, options) {
 	const add = _add(index, options)
 	const remove = _remove(index, options)
@@ -23,10 +40,11 @@ function load(index, langs, filename, options) {
 			return
 		}
 		const dict = fs.readFileSync(filepath, "utf8")
+
 		dict.split("\n").forEach((row) => {
-			row.split("|").forEach(add.bind(null, lang))
-		}, this)
-	}, this)
+			row.split("|").forEach((cell) => add(lang, cell))
+		})
+	})
 
 	langs.forEach((lang) => {
 		pelias.load(path.join("libpostal", lang, filename), add.bind(null, lang), remove)
@@ -37,8 +55,15 @@ function load(index, langs, filename, options) {
 	})
 }
 
+/**
+ * @param {string} cell
+ * @param {NormalizeOptions} options
+ *
+ * @returns {string}
+ */
 function _normalize(cell, options) {
 	let value = cell.trim()
+
 	if (options && options.replace) {
 		value = value.replace(options.replace[0], options.replace[1])
 	}
@@ -53,6 +78,12 @@ function _normalize(cell, options) {
 	return value
 }
 
+/**
+ * @param {Index} index
+ * @param {NormalizeOptions} options
+ *
+ * @returns {(lang: string, cell: string) => void}
+ */
 function _add(index, options) {
 	return (lang, cell) => {
 		const value = _normalize(cell, options)
@@ -63,6 +94,12 @@ function _add(index, options) {
 	}
 }
 
+/**
+ * @param {Index} index
+ * @param {NormalizeOptions} options
+ *
+ * @returns {(cell: string) => void}
+ */
 function _remove(index, options) {
 	return (cell) => {
 		const value = _normalize(cell, options)
@@ -75,13 +112,17 @@ function _remove(index, options) {
 // This functionality is only currently available for English
 // see: https://github.com/plurals/pluralize
 // @todo: find similar libraries which cover other languages
+/**
+ * @param {Record<string, Cell>} index
+ */
 function generatePlurals(index) {
-	_.forEach(index, (_i, cell) => {
-		if (_.get(index[cell], "langs.en", false)) {
-			const plural = pluralize(cell)
-			_.set(index, `${plural}.langs.en`, true)
-		}
-	})
+	for (const [cell, value] of Object.entries(index)) {
+		if (!value.langs.en) continue
+
+		const plural = pluralize(cell)
+		index[plural] = index[plural] || { langs: {} }
+		index[plural].langs.en = true
+	}
 }
 
 module.exports.load = load

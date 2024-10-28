@@ -71,9 +71,7 @@ module.exports.tests.english = (test) => {
 	valid.forEach((token) => {
 		test(`english: ${token}`, (t) => {
 			const s = classify(token)
-			t.deepEqual(s.classifications, {
-				DirectionalClassification: new DirectionalClassification(1.0),
-			})
+			t.deepEqual(s.classifications, { DirectionalClassification: new DirectionalClassification(1.0) })
 			t.end()
 		})
 	})
@@ -120,9 +118,7 @@ module.exports.tests.spanish = (test) => {
 	valid.forEach((token) => {
 		test(`spanish: ${token}`, (t) => {
 			const s = classify(token)
-			t.deepEqual(s.classifications, {
-				DirectionalClassification: new DirectionalClassification(1.0),
-			})
+			t.deepEqual(s.classifications, { DirectionalClassification: new DirectionalClassification(1.0) })
 			t.end()
 		})
 	})
@@ -169,9 +165,7 @@ module.exports.tests.german = (test) => {
 	valid.forEach((token) => {
 		test(`german: ${token}`, (t) => {
 			const s = classify(token)
-			t.deepEqual(s.classifications, {
-				DirectionalClassification: new DirectionalClassification(1.0),
-			})
+			t.deepEqual(s.classifications, { DirectionalClassification: new DirectionalClassification(1.0) })
 			t.end()
 		})
 	})
@@ -218,9 +212,7 @@ module.exports.tests.french = (test) => {
 	valid.forEach((token) => {
 		test(`french: ${token}`, (t) => {
 			const s = classify(token)
-			t.deepEqual(s.classifications, {
-				DirectionalClassification: new DirectionalClassification(1.0),
-			})
+			t.deepEqual(s.classifications, { DirectionalClassification: new DirectionalClassification(1.0) })
 			t.end()
 		})
 	})

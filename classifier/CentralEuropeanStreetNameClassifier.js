@@ -4,7 +4,6 @@
  * @author Teffen Ellis, et al.
  */
 
-const _ = require("lodash")
 const SectionClassifier = require("./super/SectionClassifier")
 const StreetClassification = require("../classification/StreetClassification")
 
@@ -16,6 +15,10 @@ const StreetClassification = require("../classification/StreetClassification")
  */
 
 class CentralEuropeanStreetNameClassifier extends SectionClassifier {
+	/**
+	 * @param {import("../tokenization/Span")} section
+	 * @override
+	 */
 	each(section) {
 		// there must at least two childen in this section
 		if (section.graph.length("child") < 2) {
@@ -24,24 +27,27 @@ class CentralEuropeanStreetNameClassifier extends SectionClassifier {
 
 		// get first and last child
 		const children = section.graph.findAll("child")
-		const first = _.first(children)
+		const [first] = children
+
+		if (!first) return
+
 		const next = first.graph.findOne("next")
 
-		// section must end with a HouseNumberClassification
-		if (!next) {
-			return
-		} // no next span found
-		if (next.graph.findOne("next")) {
-			return
-		} // next span is NOT the final span in the section
-		if (!next.classifications.hasOwnProperty("HouseNumberClassification")) {
+		// Section ends with a HouseNumberClassification?
+		if (!next) return
+
+		// No next span found?
+		if (next.graph.findOne("next")) return
+
+		// Next span is NOT the final span in the section?
+		if (!Object.hasOwn(next.classifications, "HouseNumberClassification")) {
 			return
 		}
 
-		// other elements cannot contain any public classifications
-		if (_.some(first.classifications, (c) => c.public)) {
-			return
-		}
+		// Other elements cannot contain any public classifications
+		const hasPublicClassifications = Object.values(first.classifications).some((c) => c.public)
+
+		if (hasPublicClassifications) return
 
 		// optionally check parent phrases too?
 		// if (_.some(first.graph.findAll('parent'), (p) => {

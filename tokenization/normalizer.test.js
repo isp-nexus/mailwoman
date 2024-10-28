@@ -48,11 +48,7 @@ module.exports.tests.normalizer = (test) => {
 	test("normalizer: option mix", (t) => {
 		const value = "Vâlüé-Mìxèd"
 		const expected = "value mixed"
-		const normalize = normalizer({
-			lowercase: true,
-			removeHyphen: true,
-			removeAccents: true,
-		})
+		const normalize = normalizer({ lowercase: true, removeHyphen: true, removeAccents: true })
 
 		t.deepEquals(normalize(value), expected)
 		t.end()

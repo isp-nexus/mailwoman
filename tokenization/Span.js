@@ -8,18 +8,49 @@ const Graph = require("./Graph")
 const MAX_SPAN_LENGTH = 140
 
 class Span {
-	constructor(body, start) {
-		this.start = start || 0
+	/**
+	 * @param {string} body
+	 * @param {number} [start]
+	 */
+	constructor(body = "", start = 0) {
+		this.start = start
+		/**
+		 * @type {string}
+		 */
+		this.body = ""
+
+		/**
+		 * @type {string}
+		 */
+		this.norm = ""
+
+		/**
+		 * @type {number} The End index of the span
+		 */
+		this.end = 0
+
 		this.setBody(body)
+
+		/**
+		 * @type {Record<string, import("../classification/Classification")>}
+		 */
 		this.classifications = {}
 
-		// graph
+		/**
+		 * @type {Graph<Span>}
+		 */
 		this.graph = new Graph()
 	}
 
 	// update the token body
-	setBody(body) {
-		this.body = body || ""
+	/**
+	 * Set the body of the Span
+	 *
+	 * @param {string} body
+	 */
+	setBody(body = "") {
+		this.body = body
+
 		if (this.body.length > MAX_SPAN_LENGTH) {
 			this.body = this.body.slice(0, MAX_SPAN_LENGTH)
 		}
@@ -36,12 +67,24 @@ class Span {
 		}
 	}
 
-	// return true if Span ranges overlap
+	/**
+	 * Predicate to determine if this Span intersects another Span
+	 *
+	 * @param {Span} span
+	 *
+	 * @returns {boolean}
+	 */
 	intersects(span) {
 		return this.start < span.end && this.end > span.start
 	}
 
-	// return true if $this totally covers the target Span
+	/**
+	 * Predicate to determine if this Span covers another Span
+	 *
+	 * @param {Span} span
+	 *
+	 * @returns {boolean}
+	 */
 	covers(span) {
 		return this.start <= span.start && this.end >= span.end
 	}
@@ -49,6 +92,13 @@ class Span {
 	// returns the distance between two Spans
 	// todo: use graph to find prev and next spans for a more accurate result
 	// todo: or base 'distance' on word distance (slop) rather than characters
+	/**
+	 * Returns the distance between two Spans
+	 *
+	 * @param {Span} span
+	 *
+	 * @returns {number}
+	 */
 	distance(span) {
 		if (this.intersects(span)) {
 			return 0
@@ -60,44 +110,75 @@ class Span {
 	}
 
 	// add a classification for this span
+	/**
+	 * @param {import("../classification/Classification")} classification
+	 *
+	 * @returns {Span}
+	 */
 	classify(classification) {
+		const constructorName = classification.constructor.name
+
 		// ensure that duplicate classifications do not reduce confidence
-		if (
-			this.classifications.hasOwnProperty(classification.constructor.name) &&
-			this.classifications[classification.constructor.name].confidence >= classification.confidence
-		) {
+		const existing = Object.hasOwn(this.classifications, constructorName) ? this.classifications[constructorName] : null
+
+		if (existing && existing.confidence >= classification.confidence) {
 			return this
 		}
-		this.classifications[classification.constructor.name] = classification
+
+		this.classifications[constructorName] = classification
+
 		return this
 	}
 
-	// set the child Spans for a subset of this Span
+	/**
+	 * Set the children of this Span.
+	 *
+	 * @param {Span[]} spans
+	 *
+	 * @returns
+	 */
 	setChildren(spans) {
-		spans.forEach((c) => this.graph.add("child", c), this)
+		for (const span of spans) {
+			this.graph.add("child", span)
+		}
 		return this
 	}
 
-	// set phrases of the children of this Span
+	/**
+	 * Set the phrases of this Span.
+	 *
+	 * @param {Span[]} phrases
+	 *
+	 * @returns {Span}
+	 */
 	setPhrases(phrases) {
 		phrases.forEach((p) => this.graph.add("phrase", p), this)
 		return this
 	}
+
+	/**
+	 * @param {...Span} spans
+	 *
+	 * @returns
+	 */
+	static connectSiblings(...spans) {
+		// Supports both var-args and Array as argument
+		if (Array.isArray(spans[0])) {
+			spans = spans[0]
+		}
+
+		for (const [i, span] of spans.entries()) {
+			if (spans[i - 1]) {
+				span.graph.add("prev", spans[i - 1])
+			}
+
+			if (spans[i + 1]) {
+				span.graph.add("next", spans[i + 1])
+			}
+		}
+
+		return spans
+	}
 }
 
 module.exports = Span
-module.exports.connectSiblings = (...spans) => {
-	// Supports both var-args and Array as argument
-	if (spans[0] instanceof Array) {
-		spans = spans[0]
-	}
-	spans.forEach((span, i) => {
-		if (spans[i - 1]) {
-			span.graph.add("prev", spans[i - 1])
-		}
-		if (spans[i + 1]) {
-			span.graph.add("next", spans[i + 1])
-		}
-	})
-	return spans
-}

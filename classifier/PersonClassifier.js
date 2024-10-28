@@ -14,9 +14,7 @@ const libpostal = require("../resources/libpostal/libpostal")
 class PersonClassifier extends PhraseClassifier {
 	setup() {
 		this.index = {}
-		libpostal.load(this.index, ["all", "fr"], "people.txt", {
-			lowercase: true,
-		})
+		libpostal.load(this.index, ["all", "fr"], "people.txt", { lowercase: true })
 	}
 
 	each(span) {

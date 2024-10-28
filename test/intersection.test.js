@@ -4,12 +4,6 @@
  * @author Teffen Ellis, et al.
  */
 
-/**
- * Test cases for intersection queries
- *
- * @param {import("tape")} test
- * @param {import("./common.js")} common
- */
 const testcase = (test, common) => {
 	const assert = common.assert(test)
 
@@ -294,18 +288,9 @@ const testcase = (test, common) => {
 		{ country: "USA" },
 	])
 }
-/**
- * Run all intersection tests
- *
- * @param {import("tape")} tape
- * @param {import("./common.js")} common
- */
-module.exports.all = function all(tape, common) {
-	/**
-	 * @param {string} name
-	 * @param {import("tape").TestCase} testFunction
-	 */
-	const test = (name, testFunction) => {
+
+module.exports.all = (tape, common) => {
+	function test(name, testFunction) {
 		return tape(`intersection: ${name}`, testFunction)
 	}
 

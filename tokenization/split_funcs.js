@@ -4,9 +4,16 @@
  * @author Teffen Ellis, et al.
  */
 
-const whitespace = new RegExp(/^\s$/)
+const whitespace = /^\s$/
 const quotes = '"«»‘’‚‛“”„‟‹›⹂「」『』〝〞〟﹁﹂﹃﹄＂＇｢｣'
 
+/**
+ * Predicate to test if a character is a field boundary
+ *
+ * @param {string} char
+ *
+ * @returns {boolean}
+ */
 function fieldsFuncBoundary(char) {
 	switch (char) {
 		case "\n":
@@ -27,10 +34,24 @@ function fieldsFuncBoundary(char) {
 
 // test for any unicode whitespace char including newlines and tabs
 // @todo: is this possible in js without using a regex?
+/**
+ * Predicate to test if a character is a field whitespace.
+ *
+ * @param {string} char
+ *
+ * @returns {boolean}
+ */
 function fieldsFuncWhiteSpace(char) {
 	return whitespace.test(char)
 }
 
+/**
+ * Predicate to test if a character is a hyphen or whitespace.
+ *
+ * @param {string} char
+ *
+ * @returns {boolean}
+ */
 function fieldsFuncHyphenOrWhiteSpace(char) {
 	return char === "-" || char === "/" || fieldsFuncWhiteSpace(char)
 }

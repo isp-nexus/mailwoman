@@ -4,7 +4,7 @@
  * @author Teffen Ellis, et al.
  */
 
-const path = require("path")
+const path = require("node:path")
 const WordClassifier = require("./super/WordClassifier")
 const PostcodeClassification = require("../classification/PostcodeClassification")
 const dictPath = path.join(__dirname, "../resources/chromium-i18n/ssl-address")

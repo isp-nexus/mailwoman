@@ -4,7 +4,6 @@
  * @author Teffen Ellis, et al.
  */
 
-const _ = require("lodash")
 const CentralEuropeanStreetNameClassifier = require("./CentralEuropeanStreetNameClassifier")
 const HouseNumberClassification = require("../classification/HouseNumberClassification")
 const StreetClassification = require("../classification/StreetClassification")
@@ -44,15 +43,14 @@ module.exports.tests.classify = (test) => {
 
 	valid.forEach((s) => {
 		test(`classify: ${s.body}`, (t) => {
-			// run classifier
 			classifier.each(s)
 
-			// get children
 			const children = s.graph.findAll("child")
+			const [head, ...tail] = children
 
 			// first child should now be classified as a street
 			t.deepEqual(
-				_.first(children).classifications,
+				head?.classifications,
 				{
 					StreetClassification: new StreetClassification(0.5),
 				},
@@ -60,7 +58,7 @@ module.exports.tests.classify = (test) => {
 			)
 
 			// last child was unchanged
-			_.tail(children).forEach((c) => {
+			tail.forEach((c) => {
 				t.deepEqual(c.classifications, {
 					HouseNumberClassification: new HouseNumberClassification(1),
 				})

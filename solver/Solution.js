@@ -4,25 +4,64 @@
  * @author Teffen Ellis, et al.
  */
 
+const Tokenizer = require("../tokenization/Tokenizer")
+
 class Solution {
-	constructor(pairs) {
-		this.pair = pairs || []
+	/**
+	 * Mapping of classification labels to mask codes.
+	 *
+	 * @type {Record<string, string>}
+	 */
+	static map = {
+		venue: "V",
+		housenumber: "N",
+		street: "S",
+		postcode: "P",
+		unit: "U",
+		unit_type: "U",
+		default: "A",
+	}
+
+	/**
+	 * Create a new solution.
+	 *
+	 * @param {import("./SolutionPair")[]} pairs
+	 */
+	constructor(pairs = []) {
+		this.pair = pairs
+
 		this.score = 0.0 // absolute score
 		this.penalty = 0.0
 	}
 
-	// create a deep copy of this solution
+	/**
+	 * Create a deep copy of this solution.
+	 *
+	 * @returns {Solution}
+	 */
 	copy() {
 		return new Solution(this.pair.slice(0))
 	}
 
-	// return true if $this totally covers the target solution
-	// ie. target solution is a subset of $this without any unique ranges
+	/**
+	 * Predicate to determine if this solution covers another solution, i.e. the target solution is a
+	 * subset of this solution without any unique ranges.
+	 *
+	 * @param {Solution} solution
+	 *
+	 * @returns {boolean}
+	 */
 	covers(solution) {
 		return solution.pair.every((p) => this.pair.some((pp) => pp.span.covers(p.span)))
 	}
 
-	// same as above but classifications must also match
+	/**
+	 * Predicate to determine if a solution covers another solution with the same classification.
+	 *
+	 * @param {Solution} solution
+	 *
+	 * @returns {boolean}
+	 */
 	coversSameClassification(solution) {
 		return solution.pair.every((p) =>
 			this.pair.some((pp) => {
@@ -31,6 +70,13 @@ class Solution {
 		)
 	}
 
+	/**
+	 * Compute the score of a solution. The score is the average confidence of the classifications
+	 * multiplied by the coverage of the input.
+	 *
+	 * @param {Tokenizer} tokenizer
+	 * @sideeffect
+	 */
 	computeScore(tokenizer) {
 		// iterate pairs to compute a score
 		const score = this.pair.reduce(
@@ -61,37 +107,41 @@ class Solution {
 		this.score = (score.confidence / score.coverage) * (score.coverage / tokenizer.coverage) * (1.0 - this.penalty)
 	}
 
-	// return a mask of the input for this solution
-	// which shows the areas covered by different types of classification
-	// N = housenumber, S = street, P = postcode, A = administrative, U = unit
+	/**
+	 * Mask which shows the areas covered by different types of classification
+	 *
+	 * - `N` housenumber
+	 * - `S` street
+	 * - `P` postcode
+	 * - `A` administrative
+	 * - `U` unit
+	 *
+	 * @param {Tokenizer} tokenizer
+	 *
+	 * @returns {string} Mask of the input for this solution
+	 */
 	mask(tokenizer) {
 		// use the original input, mask should be the same length
 		const body = tokenizer.span.body
 		const mask = Array(body.length).fill(" ")
-		const map = {
-			venue: "V",
-			housenumber: "N",
-			street: "S",
-			postcode: "P",
-			unit: "U",
-			unit_type: "U",
-			default: "A",
-		}
 
 		// scan the input letter-by-letter from left-to-right
 		for (let i = 0; i < body.length; i++) {
 			// find which fields cover this character (should only be covered by 0 or 1 field)
 			const coveredBy = this.pair.filter((p) => p.span.start <= i && p.span.end >= i)
 
-			if (coveredBy.length) {
-				const label = coveredBy[0].classification.label
-				const code = map.hasOwnProperty(label) ? map[label] : map.default
-				for (let j = coveredBy[0].span.start; j < coveredBy[0].span.end; j++) {
+			const [firstPair] = coveredBy
+
+			if (firstPair) {
+				const label = firstPair.classification.label
+				const code = Object.hasOwn(Solution.map, label) ? Solution.map[label] : Solution.map.default
+
+				for (let j = firstPair.span.start; j < firstPair.span.end; j++) {
 					mask[j] = code
 				}
 
 				// skip forward to avoid scanning the same token again
-				i = coveredBy[0].span.end
+				i = firstPair.span.end
 			}
 		}
 

@@ -59,9 +59,7 @@ module.exports.tests.without_unit_type = (test) => {
 		const p = new Span("prev")
 		s.graph.add("prev", p)
 		classifier.each(s)
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 }
@@ -69,9 +67,7 @@ module.exports.tests.without_unit_type = (test) => {
 module.exports.tests.with_unit_type = (test) => {
 	test("number with unit type", (t) => {
 		const s = classify("2020", "unit")
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 	test("letters with unit type", (t) => {
@@ -81,30 +77,22 @@ module.exports.tests.with_unit_type = (test) => {
 	})
 	test("number and letter with unit type", (t) => {
 		const s = classify("2020a", "unit")
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 	test("letter and number with unit type", (t) => {
 		const s = classify("a2", "unit")
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 	test("single letter with unit type", (t) => {
 		const s = classify("a", "unit")
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 	test("number with # with unit type", (t) => {
 		const s = classify("#22", "unit")
-		t.deepEqual(s.classifications, {
-			UnitClassification: new UnitClassification(1.0),
-		})
+		t.deepEqual(s.classifications, { UnitClassification: new UnitClassification(1.0) })
 		t.end()
 	})
 }
