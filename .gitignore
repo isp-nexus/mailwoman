@@ -43,6 +43,10 @@ pids
 *.pid.lock
 
 
+# Build files
+out
+dist
+
 # Yarn (without zero-installs)
 # https://yarnpkg.com/getting-started/qa
 .pnp.*

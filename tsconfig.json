@@ -2,8 +2,10 @@
 	"extends": "@sister.software/tsconfig",
 	"compilerOptions": {
 		"baseUrl": ".",
-		"checkJs": true,
-		"emitDeclarationOnly": true
+		"paths": {
+			"mailwoman/sdk/repo": ["./src/sdk/repo"]
+		}
 	},
+
 	"exclude": ["./out/**/*"]
 }

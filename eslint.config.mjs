@@ -23,6 +23,7 @@ const MailwomanESLintConfig = createESLintPackageConfig({
 			"@typescript-eslint/no-require-imports": "off",
 			"no-prototype-builtins": "off",
 			"jsdoc/require-property-description": "off",
+			"jsdoc/require-returns-description": "off",
 			"jsdoc/require-param-description": "off",
 		},
 	},
