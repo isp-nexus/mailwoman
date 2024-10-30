@@ -52,6 +52,14 @@
 		}
 	},
 	"bin": "./out/bin/cli.js",
+	"files": [
+		"out/**/*.js",
+		"out/**/*.js.map",
+		"out/**/*.d.ts",
+		"out/**/*.d.ts.map",
+		"out/**/*.json",
+		"!out/test/**/*"
+	],
 	"scripts": {
 		"demo": "mailwoman parse '3551 W. Hillsboro Blvd Deerfield Beach, FL 33442'",
 		"compile": "NODE_OPTIONS=\"--max-old-space-size=3000\" tsc -b",
