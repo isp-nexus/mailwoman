@@ -1,5 +1,5 @@
 /**
- * @copyright OpenISP, Inc.
+ * @copyright Sister Software
  * @license AGPL-3.0
  * @author Teffen Ellis, et al.
  */
@@ -45,19 +45,23 @@ export const repoRootPathBuilder = createPathBuilderResolver<RepoRootAlias>(Repo
 /**
  * Path builder relative to a specific package's output directory.
  */
-export function typeScriptOutPathBuilder<S extends string[]>(
+export function tsOutPathBuilder<S extends string[]>(
 	...pathSegments: S
 ): PathBuilder<Join<[RepoRootAlias, OutDirectoryName, ...S], "/">> {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	return repoRootPathBuilder(OutDirectoryName, ...pathSegments) as any
 }
 
-export type AddressResource = "chromium-i18n/ssl-address" | "custom" | "libpostal" | "pelias" | "whosonfirst"
+export type AddressResource = "chromium-i18n/ssl-address" | "libpostal" | "internal" | "whosonfirst"
 
 /**
  * Path builder relative to a address resource dictionary directory
  */
-export function resourceDictionaryPathBuilder<A extends AddressResource>(resource: A) {
-	return repoRootPathBuilder("resources", resource, "dictionaries")
+export function resourceDictionaryPathBuilder<A extends AddressResource, S extends string[]>(
+	resource: A,
+	...pathSegments: S
+) {
+	return repoRootPathBuilder("resources", resource, "dictionaries", ...pathSegments)
 }
 
 /**

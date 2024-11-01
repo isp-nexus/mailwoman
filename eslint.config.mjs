@@ -1,5 +1,5 @@
 /**
- * @copyright OpenISP, Inc.
+ * @copyright Sister Software
  * @license AGPL-3.0
  * @author Teffen Ellis, et al.
  */
@@ -13,18 +13,18 @@ import html from "eslint-plugin-html"
  * ESLint configuration for the Mailwoman repo
  */
 const MailwomanESLintConfig = createESLintPackageConfig({
-	copyrightHolder: "OpenISP, Inc.",
 	packageTitle: "Mailwoman",
 	spdxLicenseIdentifier: "AGPL-3.0",
 
 	overrides: {
 		plugins: { html },
 		rules: {
-			"@typescript-eslint/no-require-imports": "off",
-			"no-prototype-builtins": "off",
+			"guard-for-in": "error",
+			"@typescript-eslint/no-explicit-any": "error",
 			"jsdoc/require-property-description": "off",
 			"jsdoc/require-returns-description": "off",
 			"jsdoc/require-param-description": "off",
+			"jsdoc/require-yields": "off",
 		},
 	},
 })
