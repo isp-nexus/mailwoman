@@ -20,11 +20,12 @@ const MailwomanESLintConfig = createESLintPackageConfig({
 	overrides: {
 		plugins: { html },
 		rules: {
-			"@typescript-eslint/no-require-imports": "off",
-			"no-prototype-builtins": "off",
+			"guard-for-in": "error",
+			"@typescript-eslint/no-explicit-any": "error",
 			"jsdoc/require-property-description": "off",
 			"jsdoc/require-returns-description": "off",
 			"jsdoc/require-param-description": "off",
+			"jsdoc/require-yields": "off",
 		},
 	},
 })
