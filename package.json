@@ -1,6 +1,6 @@
 {
 	"name": "mailwoman",
-	"version": "0.3.1",
+	"version": "1.0.0",
 	"description": "Utilities for working with contacts for email, phone, and postal addresses.",
 	"keywords": [
 		"address",
@@ -9,13 +9,13 @@
 		"postal",
 		"pelias"
 	],
-	"homepage": "https://github.com/isp-nexus/mailwoman",
+	"homepage": "https://github.com/sister-software/mailwoman",
 	"bugs": {
-		"url": "https://github.com/isp-nexus/mailwoman/issues"
+		"url": "https://github.com/sister-software/mailwoman/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/isp-nexus/mailwoman.git"
+		"url": "https://github.com/sister-software/mailwoman.git"
 	},
 	"license": "AGPL-3.0-only",
 	"contributors": [
