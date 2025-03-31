@@ -5,7 +5,9 @@
  */
 
 import { type Classification, type ClassificationMatch, ClassificationsMatchMap } from "mailwoman/core/classification"
-import { WithDisplayable } from "../resources/debugging.js"
+import { Displayable } from "../resources/debugging.js"
+import { Alpha3bLanguageCode } from "../resources/languages/index.js"
+import { LibPostalLanguageCode } from "../resources/libpostal.js"
 import { Graph } from "./Graph.js"
 
 const MAX_SPAN_LENGTH = 140
@@ -186,9 +188,9 @@ export class Span extends Graph<Span> {
 	/**
 	 * The combined languages of the span's children.
 	 */
-	public get languages(): WithDisplayable<ReadonlySet<string>> {
+	public get languages(): Displayable<ReadonlySet<LibPostalLanguageCode | Alpha3bLanguageCode>> {
 		// Spread children langs to the parent...
-		const languages: WithDisplayable<Set<string>> = new Set()
+		const languages: Displayable<Set<LibPostalLanguageCode | Alpha3bLanguageCode>> = new Set()
 		const displayNames = new Set<string>()
 
 		for (const child of this.children) {

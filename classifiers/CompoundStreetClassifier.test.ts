@@ -4,47 +4,23 @@
  * @author Teffen Ellis, et al.
  */
 
-import { ClassificationsMatchMap } from "mailwoman/core"
-import test from "tape"
+import { assertClassification } from "mailwoman/sdk/test"
 import { CompoundStreetClassifier } from "./CompoundStreetClassifier.js"
 
 const classifier = await new CompoundStreetClassifier().ready()
 
-const valid = [
-	"teststraße",
-	"teststrasse",
-	"teststr.",
-	"teststr",
-	"grolmanstr",
-	"testallee",
-	"testweg",
-	"testplatz",
-	"testpl.",
-	"testvägen",
-]
-
-for (const token of valid) {
-	test(`german compound: ${token}`, (t) => {
-		const span = classifier.classify(token)
-
-		t.same(
-			span.classifications,
-			ClassificationsMatchMap.from({
-				classification: "street",
-				confidence: token.length > 1 ? 1 : 0.2,
-			})
-		)
-
-		t.end()
-	})
-}
-
-const invalid = ["testal", "testw", "testw."]
-
-invalid.forEach((token) => {
-	test(`german compound: ${token}`, (t) => {
-		const span = classifier.classify(token)
-		t.equal(span.classifications.size, 0)
-		t.end()
-	})
-})
+assertClassification(classifier, "street", [
+	["teststraße", ["de"]],
+	["teststrasse", ["de"]],
+	["teststr.", ["de", "nl"]],
+	["teststr", ["de"]],
+	["grolmanstr", ["de"]],
+	["testallee", ["de"]],
+	["testweg", ["de", "nl"]],
+	["testplatz", ["de"]],
+	["testpl.", ["sv", "de", "nb"]],
+	["testvägen", ["sv"]],
+	["testal", [], false],
+	["testw", [], false],
+	["testw.", [], false],
+])

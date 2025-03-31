@@ -4,14 +4,13 @@
  * @author Teffen Ellis, et al.
  */
 
+import { Stats } from "node:fs"
 import { stat } from "node:fs/promises"
 import { PathBuilderLike } from "path-ts"
 
 /**
- * Check if a file or directory exists.
+ * Attempts to stat a file or directory.
  */
-export function checkIfExists(pathBuilderLike: PathBuilderLike): Promise<boolean> {
-	return stat(pathBuilderLike)
-		.then(() => true)
-		.catch(() => false)
+export function tryStat(pathBuilderLike: PathBuilderLike): Promise<Stats | null> {
+	return stat(pathBuilderLike).catch(() => null)
 }
