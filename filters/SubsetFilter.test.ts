@@ -5,10 +5,10 @@
  */
 
 import { Solution, SolutionMatch, SolverContext, Span } from "mailwoman/core"
-import test from "tape"
+import { expect, test } from "vitest"
 import { SubsetFilter } from "./SubsetFilter.js"
 
-test("duplicate: remove dupes", (t) => {
+test("duplicate: remove dupes", () => {
 	const sp1 = new SolutionMatch(Span.from("A"), "house_number")
 	const sp2 = new SolutionMatch(Span.from("B"), "street")
 
@@ -22,11 +22,10 @@ test("duplicate: remove dupes", (t) => {
 	const c = new SubsetFilter()
 	c.solve(context)
 
-	t.deepEquals(context.solutions, [s1])
-	t.end()
+	expect(context.solutions).toStrictEqual([s1])
 })
 
-test("subset: remove subsets", (t) => {
+test("subset: remove subsets", () => {
 	const sp1 = new SolutionMatch(Span.from("A"), "house_number")
 	const sp2 = new SolutionMatch(Span.from("BCD"), "street")
 	const s1 = new Solution([sp1, sp2])
@@ -44,11 +43,10 @@ test("subset: remove subsets", (t) => {
 	const c = new SubsetFilter()
 	c.solve(context)
 
-	t.deepEquals(context.solutions, [s1])
-	t.end()
+	expect(context.solutions).toStrictEqual([s1])
 })
 
-test("subset: remove intersection subsets", (t) => {
+test("subset: remove intersection subsets", () => {
 	const sp1 = new SolutionMatch(Span.from("foo"), "street")
 	const sp2 = new SolutionMatch(Span.from("bar"), "street")
 	const s1 = new Solution([sp1, sp2])
@@ -63,6 +61,5 @@ test("subset: remove intersection subsets", (t) => {
 	const c = new SubsetFilter()
 	c.solve(context)
 
-	t.deepEquals(context.solutions, [s1])
-	t.end()
+	expect(context.solutions).toStrictEqual([s1])
 })

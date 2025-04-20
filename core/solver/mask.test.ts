@@ -6,7 +6,7 @@
 
 import { createMask } from "mailwoman/core"
 import { parser } from "mailwoman/sdk/test"
-import test from "tape"
+import { expect, test } from "vitest"
 
 const testCases: Array<[input: string, output: string]> = [
 	[
@@ -29,19 +29,15 @@ const testCases: Array<[input: string, output: string]> = [
 ]
 
 for (const [input, output] of testCases) {
-	test("mask", async (t) => {
+	test("mask", async () => {
 		const { context, solutions } = await parser.parse(input, { verbose: true })
 
 		const [solution] = solutions
 
 		if (!solution) {
-			t.fail("No solution found")
-			t.end()
-
-			return
+			throw new Error(`No solution found for input: ${input}`)
 		}
 
-		t.equal(createMask(context, solution.matches), output)
-		t.end()
+		expect(createMask(context, solution.matches)).toEqual(output)
 	})
 }

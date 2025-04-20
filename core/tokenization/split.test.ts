@@ -4,19 +4,18 @@
  * @author Teffen Ellis, et al.
  */
 
-import test from "tape"
+import { expect, test } from "vitest"
 import { Span } from "./Span.js"
 import { fieldsFuncBoundary, fieldsFuncWhiteSpace, splitByField } from "./split.js"
 
-test("boundary: no commas or quotes", (t) => {
+test("boundary: no commas or quotes", () => {
 	const span = Span.from("SoHo New York USA")
 	const actual = splitByField(span, fieldsFuncBoundary)
 
-	t.deepEquals(actual, [Span.from("SoHo New York USA")])
-	t.end()
+	expect(actual).toStrictEqual([Span.from("SoHo New York USA")])
 })
 
-test("boundary: commas", (t) => {
+test("boundary: commas", () => {
 	const span = Span.from("SoHo,,, New York, USA")
 	const actual = splitByField(span, fieldsFuncBoundary)
 
@@ -30,15 +29,10 @@ test("boundary: commas", (t) => {
 	token2.nextSiblings.add(token3)
 	token3.previousSiblings.add(token2)
 
-	t.deepEquals(
-		actual.map((s) => s.toJSON()),
-		[token1, token2, token3].map((s) => s.toJSON())
-	)
-
-	t.end()
+	expect(actual.map((s) => s.toJSON())).toStrictEqual([token1, token2, token3].map((s) => s.toJSON()))
 })
 
-test("boundary: quotes", (t) => {
+test("boundary: quotes", () => {
 	const span = Span.from('SoHo "New York" USA')
 	const actual = splitByField(span, fieldsFuncBoundary)
 
@@ -52,22 +46,17 @@ test("boundary: quotes", (t) => {
 	token2.nextSiblings.add(token3)
 	token3.previousSiblings.add(token2)
 
-	t.deepEqual(
-		actual.map((s) => s.toJSON()),
-		[token1, token2, token3].map((s) => s.toJSON())
-	)
-	t.end()
+	expect(actual.map((s) => s.toJSON())).toStrictEqual([token1, token2, token3].map((s) => s.toJSON()))
 })
 
-test("whitespace: no whitespace", (t) => {
+test("whitespace: no whitespace", () => {
 	const span = Span.from("SoHo")
 	const actual = splitByField(span, fieldsFuncWhiteSpace)
 
-	t.deepEquals(actual, [Span.from("SoHo")])
-	t.end()
+	expect(actual).toStrictEqual([Span.from("SoHo")])
 })
 
-test("whitespace: contains whitespace", (t) => {
+test("whitespace: contains whitespace", () => {
 	const span = Span.from("SoHo\t New York \n USA")
 	const actual = splitByField(span, fieldsFuncWhiteSpace)
 
@@ -84,29 +73,26 @@ test("whitespace: contains whitespace", (t) => {
 	token3.nextSiblings.add(token4)
 	token4.previousSiblings.add(token3)
 
-	t.deepEquals(
-		actual.map((s) => s.toJSON()),
-		[token1, token2, token3, token4].map((s) => s.toJSON())
-	)
-	t.end()
+	expect(actual.map((s) => s.toJSON())).toStrictEqual([token1, token2, token3, token4].map((s) => s.toJSON()))
 })
 
-test("fieldsFuncBoundary", (t) => {
-	t.true(fieldsFuncBoundary(","))
-	t.true(fieldsFuncBoundary("\n"))
-	t.true(fieldsFuncBoundary("\t"))
-	t.true(fieldsFuncBoundary('"'))
-	t.false(fieldsFuncBoundary("A"))
-	t.false(fieldsFuncBoundary("1"))
-	t.end()
+test("fieldsFuncBoundary", () => {
+	expect(fieldsFuncBoundary(",")).toBe(true)
+	expect(fieldsFuncBoundary("\n")).toBe(true)
+	expect(fieldsFuncBoundary("\t")).toBe(true)
+	expect(fieldsFuncBoundary('"')).toBe(true)
+	expect(fieldsFuncBoundary("A")).toBe(false)
+	expect(fieldsFuncBoundary("1")).toBe(false)
 })
 
-test("fieldsFuncWhiteSpace", (t) => {
-	t.true(fieldsFuncWhiteSpace(" "))
-	t.true(fieldsFuncWhiteSpace("\xa0")) // non-breaking space
-	t.true(fieldsFuncWhiteSpace("\t"))
-	t.true(fieldsFuncWhiteSpace("\n"))
-	t.false(fieldsFuncWhiteSpace("A"))
-	t.false(fieldsFuncWhiteSpace("1"))
-	t.end()
+test("fieldsFuncWhiteSpace", () => {
+	expect(fieldsFuncWhiteSpace(" ")).toBe(true)
+
+	// non-breaking space
+	expect(fieldsFuncWhiteSpace("\xa0")).toBe(true)
+
+	expect(fieldsFuncWhiteSpace("\t")).toBe(true)
+	expect(fieldsFuncWhiteSpace("\n")).toBe(true)
+	expect(fieldsFuncWhiteSpace("A")).toBe(false)
+	expect(fieldsFuncWhiteSpace("1")).toBe(false)
 })

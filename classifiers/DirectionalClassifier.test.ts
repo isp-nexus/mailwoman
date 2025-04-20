@@ -5,7 +5,7 @@
  */
 
 import { ClassificationsMatchMap } from "mailwoman/core"
-import test from "tape"
+import { expect, test } from "vitest"
 import { DirectionalClassifier } from "./DirectionalClassifier.js"
 
 const classifier = await new DirectionalClassifier().ready()
@@ -164,19 +164,17 @@ const testCasesByLangauge = new Map<string, DirectionalTestCaseRecord>([
 
 for (const [language, cases] of testCasesByLangauge) {
 	for (const token of cases.valid) {
-		test(`${language}: ${token}`, (t) => {
+		test(`${language}: ${token}`, () => {
 			const span = classifier.classify(token)
 
-			t.same(span.classifications, ClassificationsMatchMap.from("directional"))
-			t.end()
+			expect(span.classifications).toStrictEqual(ClassificationsMatchMap.from("directional"))
 		})
 	}
 
 	for (const token of cases.invalid) {
-		test(`${language}: ${token}`, (t) => {
+		test(`${language}: ${token}`, () => {
 			const span = classifier.classify(token)
-			t.equal(span.classifications.size, 0)
-			t.end()
+			expect(span.classifications.size).toEqual(0)
 		})
 	}
 }

@@ -5,10 +5,10 @@
  */
 
 import { Solution, SolutionMatch, Span } from "mailwoman/core"
-import test from "tape"
+import { expect, test } from "vitest"
 import { RelationshipFilter } from "./RelationshipFilter.js"
 
-test("postcode_preceeds_street: remove postcode", (t) => {
+test("postcode_preceeds_street: remove postcode", () => {
 	const s1 = Span.from("A")
 	s1.start = 0
 	s1.end = 1
@@ -25,13 +25,12 @@ test("postcode_preceeds_street: remove postcode", (t) => {
 	const c = new RelationshipFilter([["street", "follows", "postcode"]])
 	c.solve({ solutions })
 
-	t.deepEquals(solutions.length, 1)
-	t.deepEquals(solutions[0]!.matches.length, 1)
-	t.deepEquals(solutions[0]!.matches[0], sp1)
-	t.end()
+	expect(solutions.length).toStrictEqual(1)
+	expect(solutions[0]!.matches.length).toStrictEqual(1)
+	expect(solutions[0]!.matches[0]).toStrictEqual(sp1)
 })
 
-test("postcode_preceeds_street: remove postcode", (t) => {
+test("postcode_preceeds_street: remove postcode", () => {
 	const s1 = Span.from("A")
 	s1.start = 0
 	s1.end = 1
@@ -51,8 +50,7 @@ test("postcode_preceeds_street: remove postcode", (t) => {
 		solutions,
 	})
 
-	t.deepEquals(solutions.length, 1)
-	t.deepEquals(solutions[0]!.matches.length, 1)
-	t.deepEquals(solutions[0]!.matches[0], sp2)
-	t.end()
+	expect(solutions.length).toStrictEqual(1)
+	expect(solutions[0]!.matches.length).toStrictEqual(1)
+	expect(solutions[0]!.matches[0]).toStrictEqual(sp2)
 })

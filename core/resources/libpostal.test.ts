@@ -5,7 +5,7 @@
  */
 
 import { LibPostalLanguageCode, LocaleIndex, generatePlurals } from "mailwoman/core/resources"
-import test from "tape"
+import { expect, test } from "vitest"
 
 function createIndexFixture<T extends Iterable<readonly [string, Iterable<LibPostalLanguageCode>]>>(
 	fixtures: T
@@ -15,39 +15,36 @@ function createIndexFixture<T extends Iterable<readonly [string, Iterable<LibPos
 	})
 }
 
-test("generatePlurals: pluralize english tokens", (t) => {
+test("generatePlurals: pluralize english tokens", () => {
 	const index = createIndexFixture([["cat", ["en"]]])
 
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["cat", ["en"]],
 		["cats", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: pluralize mixed eng/xxx language tokens", (t) => {
+test("generatePlurals: pluralize mixed eng/xxx language tokens", () => {
 	const index = createIndexFixture([["cat", ["en", "fr"]]])
 
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["cat", ["en", "fr"]],
 		["cats", ["en"]], // not assigned to
 	])
-	t.end()
 })
 
-test("generatePlurals: ignore non-english tokens", (t) => {
+test("generatePlurals: ignore non-english tokens", () => {
 	const index = createIndexFixture([["cat", ["fr"]]])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [["cat", ["fr"]]])
-	t.end()
+	expect(index.toJSON()).toStrictEqual([["cat", ["fr"]]])
 })
 
-test("generatePlurals: english - functional", (t) => {
+test("generatePlurals: english - functional", () => {
 	const index = createIndexFixture([
 		["cat", ["en"]],
 		["dog", ["en"]],
@@ -56,17 +53,16 @@ test("generatePlurals: english - functional", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["cat", ["en"]],
 		["dog", ["en"]],
 		["dogs", ["en"]],
 		["fish", ["en"]],
 		["cats", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - identical singular plural", (t) => {
+test("generatePlurals: english - identical singular plural", () => {
 	const index = createIndexFixture([
 		["bison", ["en"]],
 		["buffalo", ["en"]],
@@ -83,7 +79,7 @@ test("generatePlurals: english - identical singular plural", (t) => {
 
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["bison", ["en"]],
 		["buffalo", ["en"]],
 		["deer", ["en"]],
@@ -96,10 +92,9 @@ test("generatePlurals: english - identical singular plural", (t) => {
 		["swine", ["en"]],
 		["trout", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - sibilant sound", (t) => {
+test("generatePlurals: english - sibilant sound", () => {
 	const index = createIndexFixture([
 		["kiss", ["en"]],
 		["phase", ["en"]],
@@ -110,7 +105,7 @@ test("generatePlurals: english - sibilant sound", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["kiss", ["en"]],
 		["phase", ["en"]],
 		["dish", ["en"]],
@@ -125,10 +120,9 @@ test("generatePlurals: english - sibilant sound", (t) => {
 		["witches", ["en"]],
 		["judges", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - voiceless consonant", (t) => {
+test("generatePlurals: english - voiceless consonant", () => {
 	const index = createIndexFixture([
 		["lap", ["en"]],
 		["cat", ["en"]],
@@ -138,7 +132,7 @@ test("generatePlurals: english - voiceless consonant", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["lap", ["en"]],
 		["cat", ["en"]],
 		["clock", ["en"]],
@@ -151,10 +145,9 @@ test("generatePlurals: english - voiceless consonant", (t) => {
 		["cuffs", ["en"]],
 		["deaths", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - regular plural", (t) => {
+test("generatePlurals: english - regular plural", () => {
 	const index = createIndexFixture([
 		["boy", ["en"]],
 		["girl", ["en"]],
@@ -162,7 +155,7 @@ test("generatePlurals: english - regular plural", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["boy", ["en"]],
 		["girl", ["en"]],
 		["chair", ["en"]],
@@ -171,10 +164,9 @@ test("generatePlurals: english - regular plural", (t) => {
 		["girls", ["en"]],
 		["chairs", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - nouns ending in -o", (t) => {
+test("generatePlurals: english - nouns ending in -o", () => {
 	const index = createIndexFixture([
 		["hero", ["en"]],
 		["potato", ["en"]],
@@ -182,7 +174,7 @@ test("generatePlurals: english - nouns ending in -o", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["hero", ["en"]],
 		["potato", ["en"]],
 		["volcano", ["en"]],
@@ -191,10 +183,9 @@ test("generatePlurals: english - nouns ending in -o", (t) => {
 		["potatoes", ["en"]],
 		["volcanoes", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - nouns ending in -o (Italian loanwords)", (t) => {
+test("generatePlurals: english - nouns ending in -o (Italian loanwords)", () => {
 	const index = createIndexFixture([
 		["canto", ["en"]],
 		["hetero", ["en"]],
@@ -208,7 +199,7 @@ test("generatePlurals: english - nouns ending in -o (Italian loanwords)", (t) =>
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["canto", ["en"]],
 		["hetero", ["en"]],
 		["photo", ["en"]],
@@ -229,10 +220,9 @@ test("generatePlurals: english - nouns ending in -o (Italian loanwords)", (t) =>
 		["quartos", ["en"]],
 		["kimonos", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - nouns ending in -y", (t) => {
+test("generatePlurals: english - nouns ending in -y", () => {
 	const index = createIndexFixture([
 		["cherry", ["en"]],
 		["lady", ["en"]],
@@ -240,7 +230,7 @@ test("generatePlurals: english - nouns ending in -y", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["cherry", ["en"]],
 		["lady", ["en"]],
 		["sky", ["en"]],
@@ -249,22 +239,20 @@ test("generatePlurals: english - nouns ending in -y", (t) => {
 		["ladies", ["en"]],
 		["skies", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - nouns ending in -quy", (t) => {
+test("generatePlurals: english - nouns ending in -quy", () => {
 	const index = createIndexFixture([["soliloquy", ["en"]]])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["soliloquy", ["en"]],
 
 		["soliloquies", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - voiceless fricatives", (t) => {
+test("generatePlurals: english - voiceless fricatives", () => {
 	const index = createIndexFixture([
 		["bath", ["en"]],
 		["mouth", ["en"]],
@@ -278,7 +266,7 @@ test("generatePlurals: english - voiceless fricatives", (t) => {
 	])
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["bath", ["en"]],
 		["mouth", ["en"]],
 		["calf", ["en"]],
@@ -299,10 +287,9 @@ test("generatePlurals: english - voiceless fricatives", (t) => {
 		["moths", ["en"]],
 		["proofs", ["en"]],
 	])
-	t.end()
 })
 
-test("generatePlurals: english - nouns ending in -f", (t) => {
+test("generatePlurals: english - nouns ending in -f", () => {
 	const index = createIndexFixture([
 		["dwarf", ["en"]],
 		["hoof", ["en"]],
@@ -312,7 +299,7 @@ test("generatePlurals: english - nouns ending in -f", (t) => {
 
 	generatePlurals(index)
 
-	t.same(index.toJSON(), [
+	expect(index.toJSON()).toStrictEqual([
 		["dwarf", ["en"]],
 		["hoof", ["en"]],
 		["elf", ["en"]],
@@ -323,5 +310,4 @@ test("generatePlurals: english - nouns ending in -f", (t) => {
 		["elves", ["en"]],
 		["turfs", ["en"]],
 	])
-	t.end()
 })

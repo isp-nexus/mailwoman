@@ -4,10 +4,12 @@
  * @author Teffen Ellis, et al.
  */
 
-import test from "tape"
+import { expect, test } from "vitest"
 import { CompoundUnitDesignatorClassifier } from "./CompoundUnitDesignatorClassifier.js"
 
 const classifier = await new CompoundUnitDesignatorClassifier().ready()
+
+type Foo = [unitType: string, unit: string]
 
 const valid: Array<[input: string, [unitType: string, unit: string]]> = [
 	["unit16", ["unit", "16"]],
@@ -17,18 +19,16 @@ const valid: Array<[input: string, [unitType: string, unit: string]]> = [
 
 const invalid: string[] = ["unit", "23", "Main"]
 
-test("English unit types", (t) => {
+test("English unit types", () => {
 	for (const [input, expected] of valid) {
 		const result = classifier.classify(input)
 
-		t.deepEquals(Array.from(result.children.pluck("body")), expected, `Valid input: ${input}`)
+		expect(result.children.pluck("body").toArray(), `Valid input: ${input}`).toStrictEqual(expected)
 	}
 
 	for (const input of invalid) {
 		const result = classifier.classify(input)
 
-		t.equals(result.children.size, 0, `Invalid input: ${input}`)
+		expect(result.children.size, `Invalid input: ${input}`).toEqual(0)
 	}
-
-	t.end()
 })
